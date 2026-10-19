@@ -464,6 +464,7 @@ function createNoteElement(noteData) {
   // Drag — touch
   el.addEventListener('touchstart', e => {
     if (e.touches.length !== 1) return;
+    if (e.target.closest('button')) return;
     e.preventDefault();
     startDrag(normalizePointer(e), el, noteData);
   }, { passive: false });

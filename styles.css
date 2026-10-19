@@ -1,0 +1,987 @@
+/* ===================================================
+   StickyDesk — styles.css
+   =================================================== */
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; width: 100%; overflow: hidden; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  display: flex; flex-direction: column; background: #111;
+}
+
+/* ===================================================
+   TOOLBAR
+   =================================================== */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 20px;
+  background: #12122A;
+  color: #fff;
+  z-index: 200;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.toolbar-left  { display: flex; align-items: center; gap: 14px; }
+.toolbar-right { display: flex; align-items: center; gap: 10px; }
+
+.toolbar-logo {
+  font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: #FFE566;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+.toolbar-logo::before { content: '📌'; font-size: 18px; }
+
+.toolbar-sep {
+  width: 1px; height: 22px;
+  background: rgba(255,255,255,0.18);
+  flex-shrink: 0;
+}
+
+.desk-title {
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.62);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: #FFE566; color: #12122A; border: none;
+  padding: 9px 22px; border-radius: 8px;
+  font-weight: 700; font-size: 14px; cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 2px 6px rgba(255,229,102,0.3); white-space: nowrap;
+}
+.btn-primary:hover { background: #FFD100; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,229,102,0.4); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-icon {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+  color: #ddd; padding: 7px 16px; border-radius: 8px; font-size: 13px; cursor: pointer;
+  transition: background 0.15s, color 0.15s; white-space: nowrap;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+/* ===================================================
+   DESK WRAPPER — the "room" around the desk
+   =================================================== */
+.desk-wrapper {
+  flex: 1; overflow: hidden; position: relative;
+  display: flex; justify-content: center; align-items: stretch;
+}
+
+/* --- Room / surround backgrounds --- */
+.env-student .desk-wrapper {
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0, transparent 59px,
+      rgba(0,0,0,0.1) 59px, rgba(0,0,0,0.1) 60px
+    ),
+    repeating-linear-gradient(0deg,
+      transparent 0, transparent 59px,
+      rgba(0,0,0,0.07) 59px, rgba(0,0,0,0.07) 60px
+    ),
+    linear-gradient(180deg, #2E1505 0%, #3E1C08 100%);
+}
+
+.env-professional .desk-wrapper {
+  background:
+    repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.01) 0, rgba(255,255,255,0.01) 1px,
+      transparent 1px, transparent 28px
+    ),
+    repeating-linear-gradient(-45deg,
+      rgba(255,255,255,0.01) 0, rgba(255,255,255,0.01) 1px,
+      transparent 1px, transparent 28px
+    ),
+    linear-gradient(180deg, #0A0A16 0%, #0C0C1C 100%);
+}
+
+.env-easel .desk-wrapper {
+  /* Art studio: warm plaster wall + wood floor suggestion */
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0, transparent 29px,
+      rgba(180,140,80,0.07) 29px, rgba(180,140,80,0.07) 30px
+    ),
+    linear-gradient(180deg, #1E1408 0%, #281808 100%);
+}
+
+.env-whiteboard .desk-wrapper {
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,0.025) 0, rgba(255,255,255,0.025) 1px,
+      transparent 1px, transparent 18px
+    ),
+    linear-gradient(180deg, #28282E 0%, #2C2C34 100%);
+}
+
+.env-fridge .desk-wrapper {
+  /* Kitchen: light tile grid */
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0, transparent 49px,
+      rgba(0,0,0,0.06) 49px, rgba(0,0,0,0.06) 50px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0, transparent 49px,
+      rgba(0,0,0,0.06) 49px, rgba(0,0,0,0.06) 50px
+    ),
+    linear-gradient(180deg, #E8E8E0 0%, #DCDCD4 100%);
+}
+
+.env-chalkboard .desk-wrapper {
+  /* Classroom: dark institutional walls with faint grid */
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0, transparent 29px,
+      rgba(255,255,255,0.008) 29px, rgba(255,255,255,0.008) 30px
+    ),
+    repeating-linear-gradient(0deg,
+      transparent 0, transparent 29px,
+      rgba(255,255,255,0.008) 29px, rgba(255,255,255,0.008) 30px
+    ),
+    linear-gradient(180deg, #18160A 0%, #1C1A0E 100%);
+}
+
+/* ===================================================
+   DESK SURFACE
+   =================================================== */
+.desk-surface {
+  max-width: 1300px; width: 100%;
+  position: relative;
+  overflow: visible; /* desk-wrapper clips; decor can bleed */
+}
+
+/* ===================================================
+   ════════════════════════════════════════════════
+   ENVIRONMENT SURFACES — REWORKED
+   ════════════════════════════════════════════════
+   =================================================== */
+
+/* ──────────────────────────────────────────────────
+   STUDENT DESK  —  Honey Maple with organic grain
+   ────────────────────────────────────────────────── */
+.env-student .desk-surface {
+  /* SVG feTurbulence grain as first layer */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.02 0.003' numOctaves='4' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.13'/%3E%3C/svg%3E"),
+    /* Top sheen */
+    linear-gradient(to bottom, rgba(255,225,160,0.22) 0%, transparent 7%),
+    /* Bottom shadow */
+    linear-gradient(to top,    rgba(0,0,0,0.16) 0%, transparent 9%),
+    /* Wide grain bands */
+    repeating-linear-gradient(89.5deg,
+      transparent 0px, transparent 18px,
+      rgba(140,70,10,0.038) 18px, rgba(140,70,10,0.038) 19px,
+      transparent 19px, transparent 34px,
+      rgba(100,45,5,0.028) 34px, rgba(100,45,5,0.028) 35px,
+      transparent 35px, transparent 52px,
+      rgba(160,90,15,0.04) 52px, rgba(160,90,15,0.04) 53px
+    ),
+    /* Fine grain */
+    repeating-linear-gradient(90.6deg,
+      rgba(210,150,60,0.035) 0px, rgba(210,150,60,0.035) 3px,
+      transparent 3px, transparent 10px
+    ),
+    /* Base maple colour */
+    linear-gradient(175deg, #D8A85A 0%, #C8924A 25%, #B47838 60%, #C8924A 85%, #D4A455 100%);
+  background-color: #C4904A;
+  /* Desk side edges */
+  box-shadow:
+    -28px 0 0 0 #8C5228,
+    -54px 0 0 0 #5C3010,
+    28px 0 0 0 #8C5228,
+    54px 0 0 0 #5C3010,
+    -32px 8px 18px -6px rgba(0,0,0,0.55),
+    32px 8px 18px -6px rgba(0,0,0,0.55),
+    0 10px 28px rgba(0,0,0,0.45);
+}
+
+/* Desk mat – slightly greener centre panel */
+.env-student .desk-surface::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 18%; right: 18%; bottom: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.04) 0%, transparent 4%),
+    linear-gradient(180deg, #C8924A 0%, #B87838 100%);
+  border-left:  2px solid rgba(0,0,0,0.08);
+  border-right: 2px solid rgba(0,0,0,0.08);
+  pointer-events: none; z-index: 1;
+}
+
+/* Student desk — top-edge highlight band */
+.env-student .desk-surface::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 6px;
+  background: linear-gradient(to bottom, rgba(255,230,160,0.35), transparent);
+  pointer-events: none; z-index: 2;
+}
+
+/* ──────────────────────────────────────────────────
+   PROFESSIONAL DESK  —  Dark Espresso Walnut
+   ────────────────────────────────────────────────── */
+.env-professional .desk-surface {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.045 0.006' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+    /* Subtle sheen at very top */
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, transparent 4%),
+    /* Deep base shadow */
+    linear-gradient(to top,    rgba(0,0,0,0.35) 0%, transparent 12%),
+    /* Walnut grain */
+    repeating-linear-gradient(89.8deg,
+      transparent 0px, transparent 22px,
+      rgba(255,255,255,0.016) 22px, rgba(255,255,255,0.016) 23px,
+      transparent 23px, transparent 42px,
+      rgba(255,255,255,0.01) 42px, rgba(255,255,255,0.01) 43px
+    ),
+    /* Base dark walnut */
+    linear-gradient(178deg, #221008 0%, #160804 50%, #1C0C06 100%);
+  background-color: #1A0C06;
+  box-shadow:
+    -28px 0 0 0 #100604,
+    -54px 0 0 0 #080402,
+    28px 0 0 0 #100604,
+    54px 0 0 0 #080402,
+    -32px 8px 18px -6px rgba(0,0,0,0.7),
+    32px 8px 18px -6px rgba(0,0,0,0.7),
+    0 10px 28px rgba(0,0,0,0.65);
+}
+
+/* Leather desk pad — cross-hatched dark panel */
+.env-professional .desk-surface::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 14%; right: 14%; bottom: 0;
+  background:
+    repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.022) 0, rgba(255,255,255,0.022) 1px,
+      transparent 1px, transparent 8px
+    ),
+    repeating-linear-gradient(-45deg,
+      rgba(255,255,255,0.016) 0, rgba(255,255,255,0.016) 1px,
+      transparent 1px, transparent 8px
+    ),
+    linear-gradient(180deg, #1C1008 0%, #100806 50%, #180C06 100%);
+  border-left:  3px solid rgba(255,255,255,0.04);
+  border-right: 3px solid rgba(255,255,255,0.04);
+  pointer-events: none; z-index: 1;
+}
+
+/* Top gloss highlight */
+.env-professional .desk-surface::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.07), transparent);
+  pointer-events: none; z-index: 2;
+}
+
+/* ──────────────────────────────────────────────────
+   ART EASEL  —  Linen Canvas on a Wooden Frame
+   ────────────────────────────────────────────────── */
+.env-easel .desk-surface {
+  /* Narrower = more canvas-like */
+  max-width: 920px;
+  /* Fine linen weave texture */
+  background-color: #EAE0C4;
+  background-image:
+    /* Fine diagonal weave */
+    repeating-linear-gradient(45deg,
+      rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px,
+      transparent 1px, transparent 4px
+    ),
+    repeating-linear-gradient(-45deg,
+      rgba(0,0,0,0.022) 0, rgba(0,0,0,0.022) 1px,
+      transparent 1px, transparent 4px
+    ),
+    /* Subtle canvas colour variation */
+    radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.1) 0%, transparent 70%),
+    /* Base linen tone */
+    linear-gradient(180deg, #EEE4C8 0%, #E6DAB8 50%, #EAE0C4 100%);
+  /* Bevelled wooden picture frame */
+  border-width: 22px;
+  border-style: solid;
+  border-color: #A87C34 #7A5820 #5E4014 #9A7228;
+  /* Inner canvas shadow + outer depth */
+  box-shadow:
+    inset 0 0 0 3px #8C6820,
+    inset 0 0 0 7px rgba(0,0,0,0.06),
+    inset 0 6px 28px rgba(0,0,0,0.18),
+    inset 3px 3px 10px rgba(0,0,0,0.1),
+    0 10px 36px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+/* Canvas texture overlay */
+.env-easel .desk-surface::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0, transparent 5px,
+      rgba(0,0,0,0.025) 5px, rgba(0,0,0,0.025) 6px
+    ),
+    repeating-linear-gradient(90deg,
+      transparent 0, transparent 5px,
+      rgba(0,0,0,0.018) 5px, rgba(0,0,0,0.018) 6px
+    );
+  pointer-events: none; z-index: 1;
+}
+
+/* Top-light effect on canvas */
+.env-easel .desk-surface::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 8px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+  pointer-events: none; z-index: 2;
+}
+
+/* ──────────────────────────────────────────────────
+   WHITEBOARD  —  Glossy White with Aluminium Frame
+   ────────────────────────────────────────────────── */
+.env-whiteboard .desk-surface {
+  background-color: #F5F7FA;
+  background-image:
+    /* Very faint blue ruled lines */
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 29px,
+      rgba(80,130,220,0.12) 29px, rgba(80,130,220,0.12) 30px
+    );
+  /* Aluminium frame with inner bevel */
+  border-width: 20px;
+  border-style: solid;
+  border-color: #C0C0C0 #909090 #888 #B8B8B8;
+  box-shadow:
+    inset 0 0 0 2px #D8D8D8,
+    inset 0 0 0 5px rgba(0,0,0,0.04),
+    inset 0 0 25px rgba(0,0,0,0.05),
+    0 0 0 4px #888,
+    0 8px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.env-whiteboard .desk-surface::before {
+  content: '';
+  position: absolute; inset: 0;
+  /* Glossy sheen */
+  background: linear-gradient(145deg,
+    rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 40%, transparent 60%
+  );
+  pointer-events: none; z-index: 1;
+}
+
+/* ──────────────────────────────────────────────────
+   CHALKBOARD  —  Dark Green Slate with Oak Frame
+   ────────────────────────────────────────────────── */
+.env-chalkboard .desk-surface {
+  background-color: #243824;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg,
+      transparent 0px, transparent 39px,
+      rgba(255,255,255,0.032) 39px, rgba(255,255,255,0.032) 40px
+    ),
+    linear-gradient(180deg, #263E26 0%, #1E3020 50%, #243824 100%);
+  /* Oak wooden frame */
+  border-width: 22px;
+  border-style: solid;
+  border-color: #7A5828 #5C4018 #4A3210 #6C4E20;
+  box-shadow:
+    inset 0 0 0 3px #5A3E14,
+    inset 0 0 0 7px rgba(0,0,0,0.08),
+    inset 0 6px 28px rgba(0,0,0,0.30),
+    inset 3px 3px 10px rgba(0,0,0,0.14),
+    0 10px 36px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+
+/* Chalk dust smear overlay */
+.env-chalkboard .desk-surface::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 28% 55%, rgba(255,255,255,0.028) 0%, transparent 55%),
+    radial-gradient(ellipse at 72% 38%, rgba(255,255,255,0.022) 0%, transparent 48%),
+    radial-gradient(ellipse at 50% 78%, rgba(255,255,255,0.016) 0%, transparent 40%);
+  pointer-events: none; z-index: 1;
+}
+
+/* Top edge highlight */
+.env-chalkboard .desk-surface::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.06), transparent);
+  pointer-events: none; z-index: 2;
+}
+
+/* ──────────────────────────────────────────────────
+   REFRIGERATOR DOOR  —  Brushed Stainless Steel
+   ────────────────────────────────────────────────── */
+.env-fridge .desk-surface {
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 1px,
+      rgba(0,0,0,0.015) 1px, rgba(0,0,0,0.015) 2px
+    ),
+    linear-gradient(90deg,
+      #9C9C9C 0%, #C6C6C6 12%, #DCDCDC 28%,
+      #EBEBEB 42%, #F4F4F4 50%,
+      #EBEBEB 58%, #DCDCDC 72%,
+      #C6C6C6 88%, #9C9C9C 100%
+    );
+  border-left: 6px solid #888; border-right: 6px solid #888;
+  border-top:  4px solid #9A9A9A; border-bottom: 6px solid #777;
+  box-shadow:
+    -28px 0 0 0 #BABABC,
+    28px 0 0 0 #BABABC,
+    -32px 4px 18px rgba(0,0,0,0.2),
+    32px 4px 18px rgba(0,0,0,0.2),
+    0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* ===================================================
+   STICKY NOTES
+   =================================================== */
+.sticky-note {
+  position: absolute; width: 185px; height: 185px;
+  cursor: grab; user-select: none; border-radius: 1px;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.26), 0 1px 3px rgba(0,0,0,0.12);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  z-index: 10; overflow: hidden;
+}
+.sticky-note:hover {
+  box-shadow: 5px 10px 22px rgba(0,0,0,0.34), 1px 2px 6px rgba(0,0,0,0.16);
+  z-index: 100;
+}
+.sticky-note.dragging {
+  cursor: grabbing;
+  box-shadow: 10px 16px 32px rgba(0,0,0,0.4), 3px 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000; transition: box-shadow 0.1s ease;
+}
+
+/* Glue strip */
+.note-header {
+  position: absolute; top: 0; left: 0; right: 0; height: 28px;
+  background: rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5px 0 4px;
+  border-radius: 1px 1px 0 0;
+}
+
+/* ---- Quick entry action buttons ---- */
+.note-actions {
+  display: flex; gap: 2px; opacity: 0;
+  transition: opacity 0.15s;
+}
+.sticky-note:hover .note-actions { opacity: 1; }
+
+.note-action-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(0,0,0,0.4); font-size: 11px;
+  width: 20px; height: 20px; border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  padding: 0; font-family: inherit; line-height: 1;
+  flex-shrink: 0;
+}
+.note-action-btn:hover { background: rgba(0,0,0,0.11); color: rgba(0,0,0,0.8); }
+
+.text-white .note-actions .note-action-btn { color: rgba(255,255,255,0.5); }
+.text-white .note-actions .note-action-btn:hover { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.95); }
+
+/* Ruled lines on note body */
+.sticky-note::before {
+  content: '';
+  position: absolute; top: 28px; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent 0px, transparent 19px,
+    rgba(0,0,0,0.07) 19px, rgba(0,0,0,0.07) 20px
+  );
+  pointer-events: none;
+}
+
+/* Folded corner */
+.sticky-note::after {
+  content: '';
+  position: absolute; bottom: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid; border-width: 0 0 20px 20px;
+  border-color: transparent transparent rgba(0,0,0,0.18) transparent;
+  pointer-events: none;
+}
+
+.env-fridge .sticky-note { border-radius: 3px; }
+.env-fridge .sticky-note::after { display: none; }
+.env-whiteboard .sticky-note { border-radius: 0; }
+.env-chalkboard .sticky-note { border-radius: 0; }
+.env-chalkboard .sticky-note::after { display: none; }
+
+/* Delete button */
+.note-delete {
+  opacity: 0; background: none; border: none; cursor: pointer;
+  color: rgba(0,0,0,0.45); font-size: 15px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.15s, background 0.15s, color 0.15s; flex-shrink: 0;
+}
+.sticky-note:hover .note-delete { opacity: 1; }
+.note-delete:hover { background: rgba(0,0,0,0.13); color: rgba(0,0,0,0.85); }
+
+/* Note content textarea */
+.note-content {
+  position: absolute; top: 32px; left: 8px; right: 8px; bottom: 14px;
+  resize: none; background: transparent; border: none; outline: none;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px; line-height: 20px;
+  word-break: break-word; overflow-y: auto;
+  cursor: text; color: #1a1a1a; z-index: 1;
+}
+.note-content::placeholder { color: rgba(0,0,0,0.28); font-style: italic; }
+
+/* ---- Font Sizes ---- */
+.fontsize-small  .note-content { font-size: 11px; line-height: 18px; }
+.fontsize-medium .note-content { font-size: 13px; line-height: 20px; }
+.fontsize-large  .note-content { font-size: 16px; line-height: 24px; }
+
+/* ---- Text colour variants ---- */
+.text-white .note-content { color: #ffffff; }
+.text-white .note-content::placeholder { color: rgba(255,255,255,0.38); }
+.text-white .note-delete { color: rgba(255,255,255,0.55); }
+.text-white .note-delete:hover { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.95); }
+
+/* Scrollbars */
+.note-content::-webkit-scrollbar { width: 3px; }
+.note-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+.text-white .note-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); }
+
+/* ===================================================
+   GRID OVERLAY
+   =================================================== */
+.grid-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.grid-cell { position: absolute; border: 1px dashed rgba(255,255,255,0.22); border-radius: 2px; }
+.env-whiteboard .grid-cell { border-color: rgba(80,140,220,0.2); }
+.env-easel .grid-cell { border-color: rgba(100,70,30,0.22); }
+.env-fridge .grid-cell { border-color: rgba(80,80,80,0.18); }
+.env-chalkboard .grid-cell { border-color: rgba(255,255,255,0.14); }
+
+/* ===================================================
+   ENVIRONMENT DECORATIONS
+   =================================================== */
+.env-decor { position: absolute; inset: 0; pointer-events: none; z-index: 6; overflow: visible; }
+.decor { position: absolute; pointer-events: none; }
+.decor[data-draggable] { pointer-events: auto; cursor: grab; }
+.decor[data-draggable]:active { cursor: grabbing; }
+
+/* ============================  Student: Pencil rest divet  ============================ */
+.d-pencil-divet {
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 220px; height: 16px;
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0.06) 0%,
+    rgba(55,22,4,0.55) 18%,
+    rgba(75,30,8,0.70) 50%,
+    rgba(55,22,4,0.50) 78%,
+    rgba(160,100,35,0.25) 100%
+  );
+  border-radius: 0 0 60% 60% / 0 0 100% 100%;
+  box-shadow: inset 0 5px 10px rgba(0,0,0,0.5), inset 0 2px 4px rgba(0,0,0,0.35);
+}
+
+/* ============================  Student: Pencil  ============================ */
+.d-pencil {
+  bottom: 32px; right: 55px; width: 145px; height: 12px;
+  transform: rotate(-16deg); transform-origin: right center;
+  filter: drop-shadow(1px 3px 5px rgba(0,0,0,0.4));
+}
+.p-eraser  { position: absolute; right: 0; top: 0; width: 16px; height: 12px; background: #F0A0B4; border-radius: 0 2px 2px 0; }
+.p-ferrule { position: absolute; right: 14px; top: 0; width: 10px; height: 12px; background: linear-gradient(to bottom, #D0D0D0, #989898, #D0D0D0); }
+.p-body    { position: absolute; left: 20px; right: 24px; top: 0; height: 12px; background: linear-gradient(to bottom, #F4D028 0%, #E0BC10 46%, #F4D028 54%, #C8A408 100%); }
+.p-wood    { position: absolute; left: 8px; width: 14px; height: 12px; background: linear-gradient(90deg, #E8A878 0%, #C8784A 55%, #F4D028 55%); }
+.p-tip     { position: absolute; left: 0; width: 10px; height: 12px; background: #2a2a2a; clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+
+/* ============================  Student: Apple  ============================ */
+.d-apple { bottom: 28px; right: 218px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.45)); }
+.a-body {
+  width: 50px; height: 52px;
+  background: radial-gradient(ellipse at 34% 32%, #FF7070, #CC1010 58%, #880800 100%);
+  border-radius: 50% 50% 48% 48% / 54% 54% 46% 46%; position: relative;
+}
+.a-body::before {
+  content: ''; position: absolute; top: 7px; left: 9px;
+  width: 14px; height: 9px; background: rgba(255,255,255,0.26);
+  border-radius: 50%; transform: rotate(-35deg);
+}
+.a-stem { width: 4px; height: 12px; background: #5C3010; margin: 0 auto; border-radius: 2px; transform: translateY(-2px) rotate(10deg); transform-origin: bottom center; }
+.a-leaf { position: absolute; top: -2px; left: 30px; width: 18px; height: 11px; background: linear-gradient(135deg, #56C456, #3A9A3A); border-radius: 0 100% 0 100%; transform: rotate(-38deg); }
+
+/* ============================  Professional: Laptop  ============================ */
+.d-laptop { bottom: 20px; left: 55px; filter: drop-shadow(4px 6px 10px rgba(0,0,0,0.6)); }
+.l-screen-back {
+  width: 124px; height: 80px;
+  background: linear-gradient(145deg, #4A4A4A, #303030);
+  border-radius: 6px 6px 2px 2px; border: 2px solid #585858; position: relative;
+}
+.l-screen-back::before {
+  content: ''; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; background: #262626; border-radius: 50%; border: 1px solid #484848;
+}
+.l-screen {
+  position: absolute; inset: 5px;
+  background: linear-gradient(135deg, #0E1628, #182848, #0E1E38);
+  border-radius: 2px; overflow: hidden;
+}
+.l-screen::before {
+  content: ''; position: absolute; top: 6px; left: 5px; right: 5px; height: 2px;
+  background: rgba(100,160,255,0.2);
+  box-shadow: 0 4px 0 rgba(100,160,255,0.14), 0 8px 0 rgba(100,160,255,0.1), 0 12px 0 rgba(100,160,255,0.08), 0 16px 0 rgba(100,160,255,0.06);
+}
+.l-screen::after { content: ''; position: absolute; top: 5px; left: 5px; width: 16px; height: 8px; background: rgba(100,180,255,0.12); border-radius: 2px; }
+.l-base {
+  width: 134px; height: 11px;
+  background: linear-gradient(to bottom, #505050, #3A3A3A);
+  border-radius: 0 0 5px 5px; border: 1px solid #585858; border-top: none; margin-left: -5px; position: relative;
+}
+.l-base::after {
+  content: ''; position: absolute; top: 2px; left: 8px; right: 8px; height: 3px;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 5px, transparent 5px, transparent 7px);
+}
+.l-trackpad { width: 28px; height: 18px; background: #484848; border: 1px solid #585858; border-radius: 2px; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); }
+
+/* ============================  Professional: Mouse  ============================ */
+.d-mouse {
+  bottom: 38px; right: 65px; width: 40px; height: 58px;
+  background: linear-gradient(150deg, #6A6A6A, #888, #5C5C5C);
+  border-radius: 50% 50% 38% 38% / 32% 32% 68% 68%; border: 1px solid #707070;
+  filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.6));
+}
+.d-mouse::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 40%; background: rgba(0,0,0,0.3); }
+.m-wheel { position: absolute; top: 22%; left: 50%; transform: translateX(-50%); width: 6px; height: 14px; background: linear-gradient(to bottom, #3A3A3A, #555, #3A3A3A); border-radius: 3px; }
+
+/* ============================  Professional: Pen  ============================ */
+.d-pen {
+  bottom: 28px; left: 195px; width: 120px; height: 8px;
+  transform: rotate(-8deg); transform-origin: left center;
+  filter: drop-shadow(1px 2px 4px rgba(0,0,0,0.5));
+  background: linear-gradient(to bottom, #303038, #181820 45%, #303038 55%, #101018 100%);
+  border-radius: 0 3px 3px 0;
+}
+.d-pen::before { content: ''; position: absolute; left: 0; top: 0; width: 16px; height: 8px; background: linear-gradient(90deg, #888 0%, #C0C0C0 60%, #303038 60%); clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+.d-pen::after { content: ''; position: absolute; right: 0; top: 0; width: 22px; height: 8px; background: linear-gradient(to right, #303038, #C8A020, #C8A020, #303038); border-radius: 0 3px 3px 0; }
+
+/* ============================  Easel: Shelf + Legs  ============================ */
+.d-easel-shelf {
+  bottom: 48px; left: 50%; transform: translateX(-50%);
+  width: 220px; height: 18px;
+  background: linear-gradient(to bottom, #9A7230, #705010, #9A7230);
+  border-radius: 3px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.45), inset 0 1px 2px rgba(255,255,255,0.15);
+}
+.d-easel-shelf::before, .d-easel-shelf::after { content: ''; position: absolute; top: -4px; width: 12px; height: 6px; background: #705010; border-radius: 2px 2px 0 0; }
+.d-easel-shelf::before { left: 20px; }
+.d-easel-shelf::after  { right: 20px; }
+
+/* ============================  Easel: Palette + Brush  ============================ */
+.d-palette { bottom: 38px; left: 36px; filter: drop-shadow(2px 4px 7px rgba(0,0,0,0.5)); }
+.d-palette .p-base { width: 72px; height: 52px; background: radial-gradient(ellipse at 40% 40%, #D4A860, #A87830); border-radius: 50% 30% 50% 30% / 38% 50% 38% 50%; position: relative; border: 2px solid #8A6020; }
+.p-thumb-hole { position: absolute; top: 9px; left: 9px; width: 18px; height: 18px; background: #7A5018; border-radius: 50%; border: 2px solid #6A4010; }
+.pb { position: absolute; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); }
+.pb-red    { width: 11px; height: 11px; background: #EE3030; top: 6px;  right: 10px; }
+.pb-blue   { width: 11px; height: 11px; background: #3060EE; top: 20px; right: 4px;  }
+.pb-yellow { width: 11px; height: 11px; background: #EED020; bottom: 8px; right: 14px; }
+.pb-green  { width: 9px;  height: 9px;  background: #30CC30; bottom: 10px; left: 30px; }
+.pb-white  { width: 9px;  height: 9px;  background: #EEEEEE; bottom: 14px; left: 18px; }
+
+.d-brush { bottom: 48px; left: 120px; width: 9px; height: 105px; transform: rotate(-22deg); transform-origin: bottom center; filter: drop-shadow(1px 2px 4px rgba(0,0,0,0.4)); }
+.br-handle   { position: absolute; bottom: 0; left: 0; width: 9px; height: 72px; background: linear-gradient(to right, #A06828, #D09A40, #A06828); border-radius: 4px 4px 2px 2px; }
+.br-ferrule  { position: absolute; bottom: 70px; left: 0; width: 9px; height: 9px; background: linear-gradient(to bottom, #C8C8C8, #888888); }
+.br-bristles { position: absolute; bottom: 79px; left: 1px; width: 7px; height: 26px; background: linear-gradient(to bottom, #1A1A1A, #303030, #1A1A1A, #2A2A2A); clip-path: polygon(0 0, 100% 0, 75% 100%, 25% 100%); border-radius: 0 0 3px 3px; }
+
+/* ============================  Whiteboard: Marker Tray  ============================ */
+.d-marker-tray {
+  bottom: 0; left: 50%; transform: translateX(-50%); width: 320px; height: 30px;
+  background: linear-gradient(to bottom, #3A3A3A, #282828);
+  border-radius: 2px 2px 0 0; display: flex; align-items: center;
+  padding: 4px 12px; gap: 9px; border-top: 2px solid #484848;
+}
+.tray-marker { height: 18px; width: 11px; border-radius: 2px 2px 0 0; flex-shrink: 0; }
+.tray-marker-red    { background: linear-gradient(to right, #AA1818, #EE3838, #AA1818); }
+.tray-marker-blue   { background: linear-gradient(to right, #0830AA, #1850EE, #0830AA); }
+.tray-marker-black  { background: linear-gradient(to right, #1A1A1A, #383838, #1A1A1A); }
+.tray-marker-green  { background: linear-gradient(to right, #0A6018, #18A030, #0A6018); }
+.tray-marker-purple { background: linear-gradient(to right, #580890, #8010C0, #580890); }
+.tray-eraser { height: 18px; width: 38px; background: linear-gradient(to bottom, #E8E0D0, #D0C8B8); border-radius: 2px; border: 1px solid #B0A898; margin-left: auto; flex-shrink: 0; }
+
+/* ============================  Chalkboard: Chalk Tray  ============================ */
+.d-chalk-tray {
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 320px; height: 30px;
+  background: linear-gradient(to bottom, #5C3E16, #3E2A0A);
+  border-radius: 2px 2px 0 0;
+  display: flex; align-items: center;
+  padding: 5px 14px; gap: 9px;
+  border-top: 2px solid #7A5424;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4), 0 -1px 6px rgba(0,0,0,0.3);
+}
+.chalk-stick {
+  height: 10px; border-radius: 2px; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+.ck-white  { width: 38px; background: linear-gradient(to bottom, #E2E2E2, #F2F2F2, #DADADA); }
+.ck-yellow { width: 30px; background: linear-gradient(to bottom, #D0BC40, #E8D454, #C0AC30); }
+.ck-pink   { width: 26px; background: linear-gradient(to bottom, #CC8098, #E09AAE, #BC7088); }
+.ck-blue   { width: 32px; background: linear-gradient(to bottom, #6078C0, #7A90D4, #5068B0); }
+.chalk-felt-eraser {
+  height: 20px; width: 50px;
+  background: linear-gradient(to right, #686058, #7A7268, #686058);
+  border-radius: 2px;
+  border: 1px solid #484040;
+  margin-left: auto; flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 1px 3px rgba(0,0,0,0.4);
+  position: relative;
+}
+.chalk-felt-eraser::before {
+  content: '';
+  position: absolute; top: 2px; left: 4px; right: 4px; height: 3px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 1px;
+}
+
+/* ============================  Fridge: Handle + Magnets  ============================ */
+.d-fridge-handle { right: 22px; top: 50%; transform: translateY(-50%); width: 20px; height: 170px; }
+.fh-bar { position: absolute; top: 20px; bottom: 20px; left: 0; right: 0; background: linear-gradient(to right, #787878 0%, #C8C8C8 20%, #E8E8E8 45%, #F2F2F2 50%, #E8E8E8 55%, #C8C8C8 80%, #787878 100%); border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.4), inset 1px 0 2px rgba(255,255,255,0.3); }
+.fh-mount { position: absolute; left: 50%; transform: translateX(-50%); width: 32px; height: 14px; background: linear-gradient(to bottom, #989898, #686868); border-radius: 4px; box-shadow: 1px 1px 4px rgba(0,0,0,0.4); }
+.fh-mount-top    { top: 8px; }
+.fh-mount-bottom { bottom: 8px; }
+
+.d-fridge-magnet { width: 32px; height: 22px; border-radius: 4px; box-shadow: 1px 2px 4px rgba(0,0,0,0.25); }
+.fm-red    { background: linear-gradient(135deg, #FF4040, #CC1010); top: 60px;  left: 55px; }
+.fm-blue   { background: linear-gradient(135deg, #4080FF, #1040CC); top: 110px; left: 90px; }
+.fm-yellow { background: linear-gradient(135deg, #FFE020, #C8A800); top: 55px;  left: 100px; }
+
+/* ===================================================
+   PAGE NAVIGATION
+   =================================================== */
+.page-nav {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  height: 46px; background: rgba(10,10,20,0.82); backdrop-filter: blur(8px);
+  color: #fff; flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.07);
+}
+.nav-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+  color: #ddd; width: 32px; height: 32px; border-radius: 6px; font-size: 20px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s; line-height: 1; padding: 0;
+}
+.nav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.18); color: #fff; }
+.nav-btn:disabled { opacity: 0.28; cursor: not-allowed; }
+.nav-btn-add { font-size: 22px; background: rgba(255,229,102,0.15); border-color: rgba(255,229,102,0.35); color: #FFE566; }
+.nav-btn-add:hover { background: rgba(255,229,102,0.28) !important; color: #FFD100 !important; }
+#pageInfo { font-size: 13px; color: rgba(255,255,255,0.65); min-width: 54px; text-align: center; letter-spacing: 0.5px; }
+
+/* ===================================================
+   SETTINGS PANEL
+   =================================================== */
+.settings-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.settings-overlay.show { opacity: 1; pointer-events: all; }
+
+.settings-panel { position: fixed; top: 0; right: 0; width: 320px; height: 100%; background: #12122A; color: #e0e0e0; z-index: 400; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,0.08); }
+.settings-panel.open { transform: translateX(0); }
+.settings-panel::-webkit-scrollbar { width: 4px; }
+.settings-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 2px; }
+
+.settings-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; background: #12122A; z-index: 10; }
+.settings-header h2 { font-size: 17px; font-weight: 700; color: #FFE566; letter-spacing: 0.3px; }
+
+.btn-icon-sm { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: #aaa; width: 28px; height: 28px; border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
+.btn-icon-sm:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+.settings-section { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.settings-section h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.42); margin-bottom: 12px; }
+
+.option-group { display: flex; flex-direction: column; gap: 7px; }
+.option-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s; position: relative; }
+.option-card:hover { background: rgba(255,255,255,0.05); }
+.option-card.selected { background: rgba(255,229,102,0.1); border-color: rgba(255,229,102,0.45); }
+.option-card input[type="radio"] { display: none; }
+.option-check { margin-left: auto; color: #FFE566; font-size: 14px; opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }
+.option-card.selected .option-check { opacity: 1; }
+.option-label { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.option-label strong { font-size: 14px; color: #e4e4e4; }
+.option-label small { font-size: 11px; color: rgba(255,255,255,0.42); }
+
+.swatch-row { display: flex; gap: 4px; margin-top: 5px; }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.18); flex-shrink: 0; }
+
+.toggle-group { display: flex; border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; overflow: hidden; }
+.toggle-btn { flex: 1; padding: 9px; background: none; border: none; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 13px; transition: background 0.15s, color 0.15s; font-family: inherit; }
+.toggle-btn:first-child { border-right: 1px solid rgba(255,255,255,0.14); }
+.toggle-btn.active { background: rgba(255,229,102,0.14); color: #FFE566; font-weight: 700; }
+.toggle-btn:hover:not(.active) { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+
+/* ---- Font Size Buttons ---- */
+.size-group { display: flex; gap: 8px; }
+.size-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 10px 6px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+  cursor: pointer; color: rgba(255,255,255,0.55);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.size-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+.size-btn.active { background: rgba(255,229,102,0.12); border-color: rgba(255,229,102,0.45); color: #FFE566; }
+.size-preview { font-weight: 700; color: inherit; line-height: 1; }
+.size-btn > span:last-child { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+/* ---- Environment Grid ---- */
+.env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.env-card { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 6px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s; position: relative; }
+.env-card:hover { background: rgba(255,255,255,0.05); }
+.env-card.selected { background: rgba(255,229,102,0.1); border-color: rgba(255,229,102,0.45); }
+.env-card input[type="radio"] { display: none; }
+.env-card > span:not(.option-check) { font-size: 11px; color: rgba(255,255,255,0.65); text-align: center; }
+.env-card .option-check { position: absolute; top: 5px; right: 6px; font-size: 11px; color: #FFE566; opacity: 0; transition: opacity 0.15s; }
+.env-card.selected .option-check { opacity: 1; }
+
+.env-thumb { width: 100%; height: 44px; border-radius: 4px; overflow: hidden; }
+.env-student-thumb      { background-color: #C4904A; background-image: repeating-linear-gradient(92deg, transparent 0, transparent 6px, rgba(0,0,0,0.025) 6px, rgba(0,0,0,0.025) 7px); }
+.env-professional-thumb { background-color: #1A0C06; background-image: repeating-linear-gradient(92deg, transparent 0, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 11px); }
+.env-easel-thumb        { background-color: #EAE0C4; border: 4px solid #7B5C28; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 4px); }
+.env-whiteboard-thumb   { background-color: #F5F7FA; border: 5px solid #B8B8B8; }
+.env-fridge-thumb       { background: linear-gradient(90deg, #9A9A9A 0%, #DCDCDC 35%, #F2F2F2 50%, #DCDCDC 65%, #9A9A9A 100%); }
+.env-chalkboard-thumb   { background-color: #243824; border: 4px solid #6A4C20; background-image: repeating-linear-gradient(0deg, transparent 0, transparent 9px, rgba(255,255,255,0.05) 9px, rgba(255,255,255,0.05) 10px); }
+
+.settings-footer { padding: 16px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.07); }
+.btn-danger { width: 100%; padding: 9px; background: rgba(220,60,60,0.12); border: 1px solid rgba(220,60,60,0.3); color: #ff6b6b; border-radius: 8px; font-size: 13px; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-family: inherit; }
+.btn-danger:hover { background: rgba(220,60,60,0.22); border-color: rgba(220,60,60,0.5); }
+
+/* ===================================================
+   POLISH — ANIMATIONS & MICRO-INTERACTIONS
+   =================================================== */
+
+/* Note appear animation — only opacity to avoid conflicting with inline rotate */
+@keyframes note-appear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.sticky-note {
+  animation: note-appear 0.18s ease;
+}
+.sticky-note.dragging { animation: none; }
+
+/* Button press feedback */
+.btn-primary:active     { transform: translateY(1px) scale(0.98); }
+.size-btn:active        { transform: scale(0.96); }
+.toggle-btn:active      { transform: scale(0.97); }
+.env-card:active        { transform: scale(0.98); }
+.note-action-btn:active { transform: scale(0.9); }
+.nav-btn:active:not(:disabled) { transform: scale(0.92); }
+
+/* Settings section headings — yellow accent bar */
+.settings-section h3 {
+  display: flex; align-items: center; gap: 8px;
+}
+.settings-section h3::before {
+  content: '';
+  display: inline-block; flex-shrink: 0;
+  width: 3px; height: 11px;
+  background: linear-gradient(to bottom, #FFE566, #FFB800);
+  border-radius: 2px;
+}
+
+/* Selected env-card glow */
+.env-card.selected {
+  box-shadow: 0 0 0 1px rgba(255,229,102,0.2), inset 0 0 8px rgba(255,229,102,0.04);
+}
+
+/* Toolbar bottom accent line */
+.toolbar::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,229,102,0.25) 40%, rgba(255,229,102,0.25) 60%, transparent 100%);
+  pointer-events: none;
+}
+.toolbar { position: relative; }
+
+/* ===================================================
+   TOUCH DEVICES — always-visible note controls
+   =================================================== */
+@media (hover: none) {
+  .note-actions { opacity: 1; }
+  .note-delete  { opacity: 0.6; }
+  .sticky-note:hover .note-actions { opacity: 1; }
+  .sticky-note:hover .note-delete  { opacity: 0.6; }
+}
+
+/* ===================================================
+   RESPONSIVE — TABLET  (≤ 900px)
+   =================================================== */
+@media (max-width: 900px) {
+  /* Easel unconstrained */
+  .env-easel .desk-surface { max-width: 100%; }
+}
+
+/* ===================================================
+   RESPONSIVE — MOBILE  (≤ 680px)
+   =================================================== */
+@media (max-width: 680px) {
+  /* ---- Toolbar ---- */
+  .toolbar { height: 50px; padding: 0 14px; }
+  .toolbar-logo { font-size: 16px; }
+  .toolbar-logo::before { font-size: 14px; }
+  .toolbar-sep,
+  .desk-title { display: none; }
+  .btn-primary { padding: 7px 13px; font-size: 12px; }
+  .btn-icon    { padding: 6px 10px; font-size: 12px; }
+
+  /* ---- Desk wrapper — reduce room padding ---- */
+  .desk-wrapper { align-items: stretch; }
+
+  /* ---- Desk side shadows shrink on small screens ---- */
+  .env-student .desk-surface,
+  .env-professional .desk-surface {
+    box-shadow:
+      -14px 0 0 0 rgba(0,0,0,0.35),
+      14px 0 0 0 rgba(0,0,0,0.35),
+      0 8px 22px rgba(0,0,0,0.4);
+  }
+
+  /* ---- Notes — always show action buttons on touch ---- */
+  .note-actions { opacity: 1; }
+  .note-delete  { opacity: 0.6; }
+
+  /* ---- Page navigation ---- */
+  .page-nav { height: 40px; gap: 8px; }
+  .nav-btn  { width: 28px; height: 28px; font-size: 17px; }
+  #pageInfo { font-size: 12px; min-width: 40px; }
+
+  /* ---- Settings panel — full width ---- */
+  .settings-panel { width: 100%; border-left: none; }
+  .settings-section { padding: 14px 16px; }
+  .settings-header  { padding: 14px 16px; }
+  .settings-footer  { padding: 14px 16px; }
+
+  /* ---- Environment grid — two columns (unchanged, just more compact) ---- */
+  .env-grid { gap: 6px; }
+  .env-thumb { height: 36px; }
+}
+
+/* ===================================================
+   RESPONSIVE — SMALL PHONES  (≤ 420px)
+   =================================================== */
+@media (max-width: 420px) {
+  .toolbar-logo::before { display: none; }
+  .btn-primary { padding: 6px 10px; font-size: 11px; }
+  .btn-icon    { padding: 6px 8px;  font-size: 11px; }
+
+  /* Stack toolbar if it gets too tight */
+  .toolbar-right { gap: 6px; }
+}

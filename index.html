@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StickyDesk</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="env-student theme-themed text-black mode-free fontsize-medium">
+
+  <!-- ===== TOOLBAR ===== -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="toolbar-logo">StickyDesk</div>
+      <span class="toolbar-sep"></span>
+      <span id="deskTitle" class="desk-title">Student Desk</span>
+    </div>
+    <div class="toolbar-right">
+      <button id="addNoteBtn" class="btn-primary">+ Add Note</button>
+      <button id="settingsBtn" class="btn-icon">&#9881; Settings</button>
+    </div>
+  </div>
+
+  <!-- ===== DESK ===== -->
+  <div class="desk-wrapper">
+    <div id="deskSurface" class="desk-surface">
+      <div id="gridOverlay" class="grid-overlay"></div>
+      <div id="envDecor" class="env-decor"></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE NAVIGATION ===== -->
+  <div class="page-nav">
+    <button id="prevPage" class="nav-btn" title="Previous page">&#8249;</button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextPage" class="nav-btn" title="Next page">&#8250;</button>
+    <button id="addPage" class="nav-btn nav-btn-add" title="Add new page">&#43;</button>
+  </div>
+
+  <!-- ===== SETTINGS OVERLAY ===== -->
+  <div id="settingsOverlay" class="settings-overlay"></div>
+
+  <!-- ===== SETTINGS PANEL ===== -->
+  <div id="settingsPanel" class="settings-panel">
+    <div class="settings-header">
+      <h2>Settings</h2>
+      <button id="closeSettings" class="btn-icon-sm">&#10005;</button>
+    </div>
+
+    <!-- Note Colors -->
+    <div class="settings-section">
+      <h3>Note Colors</h3>
+      <div class="option-group" id="colorThemeGroup">
+        <label class="option-card" data-name="colorTheme" data-value="themed">
+          <input type="radio" name="colorTheme" value="themed" />
+          <div class="option-label">
+            <strong>Themed</strong>
+            <div class="swatch-row" id="swatches-themed"></div>
+          </div>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="option-card" data-name="colorTheme" data-value="bright">
+          <input type="radio" name="colorTheme" value="bright" />
+          <div class="option-label">
+            <strong>Bright</strong>
+            <div class="swatch-row" id="swatches-bright"></div>
+          </div>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="option-card" data-name="colorTheme" data-value="muted">
+          <input type="radio" name="colorTheme" value="muted" />
+          <div class="option-label">
+            <strong>Muted</strong>
+            <div class="swatch-row" id="swatches-muted"></div>
+          </div>
+          <span class="option-check">&#10003;</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Text Color -->
+    <div class="settings-section">
+      <h3>Text Color</h3>
+      <div class="toggle-group">
+        <button class="toggle-btn" id="textColorBlack">Black</button>
+        <button class="toggle-btn" id="textColorWhite">White</button>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div class="settings-section">
+      <h3>Text Size</h3>
+      <div class="size-group">
+        <button class="size-btn" id="sizeSmall" data-size="small">
+          <span class="size-preview" style="font-size:11px">Aa</span>
+          <span>Small</span>
+        </button>
+        <button class="size-btn" id="sizeMedium" data-size="medium">
+          <span class="size-preview" style="font-size:14px">Aa</span>
+          <span>Medium</span>
+        </button>
+        <button class="size-btn" id="sizeLarge" data-size="large">
+          <span class="size-preview" style="font-size:18px">Aa</span>
+          <span>Large</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Environment -->
+    <div class="settings-section">
+      <h3>Environment</h3>
+      <div class="env-grid">
+        <label class="env-card" data-value="student">
+          <input type="radio" name="environment" value="student" />
+          <div class="env-thumb env-student-thumb"></div>
+          <span>Student Desk</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="env-card" data-value="professional">
+          <input type="radio" name="environment" value="professional" />
+          <div class="env-thumb env-professional-thumb"></div>
+          <span>Work Desk</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="env-card" data-value="easel">
+          <input type="radio" name="environment" value="easel" />
+          <div class="env-thumb env-easel-thumb"></div>
+          <span>Art Easel</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="env-card" data-value="whiteboard">
+          <input type="radio" name="environment" value="whiteboard" />
+          <div class="env-thumb env-whiteboard-thumb"></div>
+          <span>Whiteboard</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="env-card" data-value="fridge">
+          <input type="radio" name="environment" value="fridge" />
+          <div class="env-thumb env-fridge-thumb"></div>
+          <span>Fridge Door</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="env-card" data-value="chalkboard">
+          <input type="radio" name="environment" value="chalkboard" />
+          <div class="env-thumb env-chalkboard-thumb"></div>
+          <span>Chalkboard</span>
+          <span class="option-check">&#10003;</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Layout Mode -->
+    <div class="settings-section">
+      <h3>Layout Mode</h3>
+      <div class="option-group">
+        <label class="option-card" data-name="layoutMode" data-value="free">
+          <input type="radio" name="layoutMode" value="free" />
+          <div class="option-label">
+            <strong>Free Stick</strong>
+            <small>Place notes anywhere on the desk</small>
+          </div>
+          <span class="option-check">&#10003;</span>
+        </label>
+        <label class="option-card" data-name="layoutMode" data-value="grid">
+          <input type="radio" name="layoutMode" value="grid" />
+          <div class="option-label">
+            <strong>Grid Mode</strong>
+            <small>Snap to a 4-column grid</small>
+          </div>
+          <span class="option-check">&#10003;</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <button id="clearPageBtn" class="btn-danger">Clear This Page</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

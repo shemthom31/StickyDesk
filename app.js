@@ -191,14 +191,14 @@ function setCurrentPage(i) {
 }
 
 // ===================================================
-// DOM REFS
+// DOM REFS  (assigned in init() after DOM is ready)
 // ===================================================
 
-const deskSurface      = document.getElementById('deskSurface');
-const gridOverlay      = document.getElementById('gridOverlay');
-const pageInfo         = document.getElementById('pageInfo');
-const settingsPanel    = document.getElementById('settingsPanel');
-const settingsOverlay  = document.getElementById('settingsOverlay');
+let deskSurface;
+let gridOverlay;
+let pageInfo;
+let settingsPanel;
+let settingsOverlay;
 
 // ===================================================
 // DRAG STATE
@@ -214,6 +214,13 @@ const DRAG_THRESHOLD = 8;  // px of movement before a touch is treated as a drag
 // ===================================================
 
 function init() {
+  // Grab DOM refs here — guaranteed to run after DOM is ready
+  deskSurface    = document.getElementById('deskSurface');
+  gridOverlay    = document.getElementById('gridOverlay');
+  pageInfo       = document.getElementById('pageInfo');
+  settingsPanel  = document.getElementById('settingsPanel');
+  settingsOverlay = document.getElementById('settingsOverlay');
+
   // Ensure per-env pages structure is valid for current environment
   if (!state.envPages)      state.envPages      = {};
   if (!state.envCurrentPage) state.envCurrentPage = {};
@@ -335,6 +342,7 @@ function applySettings() {
 // ===================================================
 
 function buildGridOverlay() {
+  if (!gridOverlay) return;
   gridOverlay.innerHTML = '';
   if (state.settings.layoutMode !== 'grid') return;
 
@@ -359,6 +367,7 @@ function buildGridOverlay() {
 // ===================================================
 
 function renderPage() {
+  if (!deskSurface || !pageInfo) return;
   deskSurface.querySelectorAll('.sticky-note').forEach(el => el.remove());
 
   const pages = getPages();
@@ -508,8 +517,8 @@ function addNote() {
     rotation = 0;
   } else {
     // Centre of desk with slight random offset
-    const w = deskSurface.clientWidth;
-    const h = deskSurface.clientHeight;
+    const w = deskSurface ? deskSurface.clientWidth  : 800;
+    const h = deskSurface ? deskSurface.clientHeight : 600;
     x = (w - NOTE_W) / 2 + (Math.random() - 0.5) * 80;
     y = (h - NOTE_H) / 2 + (Math.random() - 0.5) * 80;
     x = Math.max(GRID_PAD, Math.min(w - NOTE_W - GRID_PAD, x));
@@ -856,13 +865,13 @@ function changeLayoutMode(mode) {
 // ===================================================
 
 function openSettings() {
-  settingsPanel.classList.add('open');
-  settingsOverlay.classList.add('show');
+  if (settingsPanel)  settingsPanel.classList.add('open');
+  if (settingsOverlay) settingsOverlay.classList.add('show');
 }
 
 function closeSettings() {
-  settingsPanel.classList.remove('open');
-  settingsOverlay.classList.remove('show');
+  if (settingsPanel)  settingsPanel.classList.remove('open');
+  if (settingsOverlay) settingsOverlay.classList.remove('show');
 }
 
 // ===================================================

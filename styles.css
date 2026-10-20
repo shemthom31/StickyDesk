@@ -48,6 +48,9 @@ body {
   white-space: nowrap;
 }
 
+/* Eliminate 300ms tap delay on all buttons across all mobile browsers */
+button { touch-action: manipulation; }
+
 .btn-primary {
   background: #FFE566; color: #12122A; border: none;
   padding: 9px 22px; border-radius: 8px;
@@ -919,6 +922,18 @@ body {
   .note-delete  { opacity: 0.6; }
   .sticky-note:hover .note-actions { opacity: 1; }
   .sticky-note:hover .note-delete  { opacity: 0.6; }
+
+  /* Larger tap targets on touch devices (min 44px recommended) */
+  .note-action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+  .note-delete {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
 }
 
 /* ===================================================

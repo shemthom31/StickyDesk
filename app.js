@@ -413,8 +413,14 @@ function createNoteElement(noteData) {
   ta.style.color = state.settings.textColor === 'white' ? '#ffffff' : '#1a1a1a';
 
   // Delete
-  el.querySelector('.note-delete').addEventListener('click', e => {
+  const deleteBtn = el.querySelector('.note-delete');
+  deleteBtn.addEventListener('click', e => {
     e.stopPropagation();
+    deleteNote(noteData.id);
+  });
+  deleteBtn.addEventListener('touchend', e => {
+    e.stopPropagation();
+    e.preventDefault(); // prevent the subsequent click from double-firing
     deleteNote(noteData.id);
   });
 
@@ -423,6 +429,11 @@ function createNoteElement(noteData) {
     btn.addEventListener('mousedown', e => e.stopPropagation());
     btn.addEventListener('click', e => {
       e.stopPropagation();
+      handleNoteAction(btn.dataset.action, ta, noteData);
+    });
+    btn.addEventListener('touchend', e => {
+      e.stopPropagation();
+      e.preventDefault(); // prevent the subsequent click from double-firing
       handleNoteAction(btn.dataset.action, ta, noteData);
     });
   });

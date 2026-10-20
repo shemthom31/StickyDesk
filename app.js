@@ -203,8 +203,10 @@ const settingsOverlay  = document.getElementById('settingsOverlay');
 // DRAG STATE
 // ===================================================
 
-let drag = null;
-let decorDrag = null;
+let drag        = null;
+let decorDrag   = null;
+let touchPending = null;   // { el, noteData, startX, startY } — waiting to become a drag
+const DRAG_THRESHOLD = 8;  // px of movement before a touch is treated as a drag
 
 // ===================================================
 // INIT
@@ -472,13 +474,18 @@ function createNoteElement(noteData) {
     if (e.button !== 0) return;
     startDrag(e, el, noteData);
   });
-  // Drag — touch
+  // Drag — touch: passive so click events are never suppressed.
+  // Actual drag is started in the document touchmove once the finger moves enough.
   el.addEventListener('touchstart', e => {
     if (e.touches.length !== 1) return;
-    if (e.target.closest('button')) return;
-    e.preventDefault();
-    startDrag(normalizePointer(e), el, noteData);
-  }, { passive: false });
+    if (e.target.closest('button') || e.target.tagName === 'TEXTAREA') return;
+    touchPending = {
+      el,
+      noteData,
+      startX: e.touches[0].clientX,
+      startY: e.touches[0].clientY
+    };
+  }, { passive: true });
 
   deskSurface.appendChild(el);
   return el;
@@ -957,11 +964,26 @@ function bindEvents() {
   document.addEventListener('mouseup',   onMouseUp);
   // Global drag handlers — touch
   document.addEventListener('touchmove', e => {
-    if (!drag && !decorDrag) return;
-    e.preventDefault();
-    onMouseMove(normalizePointer(e));
+    // Active drag: suppress scroll and move the element
+    if (drag || decorDrag) {
+      e.preventDefault();
+      onMouseMove(normalizePointer(e));
+      return;
+    }
+    // Pending touch: start drag only once finger has moved far enough
+    if (touchPending && e.touches.length === 1) {
+      const dx = e.touches[0].clientX - touchPending.startX;
+      const dy = e.touches[0].clientY - touchPending.startY;
+      if (Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+        e.preventDefault();
+        const { el, noteData } = touchPending;
+        touchPending = null;
+        startDrag(normalizePointer(e), el, noteData);
+      }
+    }
   }, { passive: false });
   document.addEventListener('touchend', e => {
+    touchPending = null;   // tap ended without becoming a drag — click fires normally
     onMouseUp(normalizePointer(e));
   });
 

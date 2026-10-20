@@ -1022,4 +1022,11 @@ function bindEvents() {
 // START
 // ===================================================
 
-document.addEventListener('DOMContentLoaded', init);
+// DOMContentLoaded may have already fired by the time this module loads
+// (e.g. on mobile over a network where module fetch latency is non-trivial).
+// Guard against that by checking readyState first.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

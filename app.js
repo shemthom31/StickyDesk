@@ -421,22 +421,12 @@ function createNoteElement(noteData) {
     e.stopPropagation();
     deleteNote(noteData.id);
   });
-  deleteBtn.addEventListener('touchend', e => {
-    e.stopPropagation();
-    e.preventDefault(); // prevent the subsequent click from double-firing
-    deleteNote(noteData.id);
-  });
 
   // Quick-entry action buttons
   el.querySelectorAll('.note-action-btn').forEach(btn => {
     btn.addEventListener('mousedown', e => e.stopPropagation());
     btn.addEventListener('click', e => {
       e.stopPropagation();
-      handleNoteAction(btn.dataset.action, ta, noteData);
-    });
-    btn.addEventListener('touchend', e => {
-      e.stopPropagation();
-      e.preventDefault(); // prevent the subsequent click from double-firing
       handleNoteAction(btn.dataset.action, ta, noteData);
     });
   });

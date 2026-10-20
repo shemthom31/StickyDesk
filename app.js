@@ -181,7 +181,8 @@ function getPages() {
 function getCurrentPage() {
   const env = state.settings.environment;
   if (!state.envCurrentPage) state.envCurrentPage = {};
-  return state.envCurrentPage[env] ?? 0;
+  var p = state.envCurrentPage[env];
+  return (p !== undefined && p !== null) ? p : 0;
 }
 
 function setCurrentPage(i) {
@@ -279,8 +280,8 @@ function updateTextColorUI() {
 function updateFontSizeUI() {
   const sz = state.settings.fontSize || 'medium';
   ['small', 'medium', 'large'].forEach(s => {
-    document.getElementById('size' + s.charAt(0).toUpperCase() + s.slice(1))
-      ?.classList.toggle('active', s === sz);
+    const sizeEl = document.getElementById('size' + s.charAt(0).toUpperCase() + s.slice(1));
+    if (sizeEl) sizeEl.classList.toggle('active', s === sz);
   });
 }
 
@@ -546,7 +547,8 @@ function addNote() {
 function deleteNote(id) {
   const page = getPages()[getCurrentPage()];
   page.notes = page.notes.filter(n => n.id !== id);
-  document.getElementById(id)?.remove();
+  const noteEl = document.getElementById(id);
+  if (noteEl) noteEl.remove();
   saveState();
 }
 
@@ -908,14 +910,21 @@ function loadState() {
 // EVENT BINDING
 // ===================================================
 
+// Null-safe addEventListener helper — if the element doesn't exist for any reason,
+// skip it instead of throwing a TypeError that stops all subsequent bindings.
+function on(id, event, handler) {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener(event, handler);
+}
+
 function bindEvents() {
   // Toolbar
-  document.getElementById('addNoteBtn').addEventListener('click', addNote);
-  document.getElementById('settingsBtn').addEventListener('click', openSettings);
+  on('addNoteBtn',  'click', addNote);
+  on('settingsBtn', 'click', openSettings);
 
   // Settings panel
-  document.getElementById('closeSettings').addEventListener('click', closeSettings);
-  settingsOverlay.addEventListener('click', closeSettings);
+  on('closeSettings', 'click', closeSettings);
+  if (settingsOverlay) settingsOverlay.addEventListener('click', closeSettings);
 
   // Color theme
   document.querySelectorAll('[name="colorTheme"]').forEach(radio => {
@@ -926,13 +935,12 @@ function bindEvents() {
   });
 
   // Text color
-  document.getElementById('textColorBlack').addEventListener('click', () => changeTextColor('black'));
-  document.getElementById('textColorWhite').addEventListener('click', () => changeTextColor('white'));
+  on('textColorBlack', 'click', () => changeTextColor('black'));
+  on('textColorWhite', 'click', () => changeTextColor('white'));
 
   // Font size
   ['small', 'medium', 'large'].forEach(sz => {
-    document.getElementById('size' + sz.charAt(0).toUpperCase() + sz.slice(1))
-      ?.addEventListener('click', () => changeFontSize(sz));
+    on('size' + sz.charAt(0).toUpperCase() + sz.slice(1), 'click', () => changeFontSize(sz));
   });
 
   // Environment
@@ -952,12 +960,12 @@ function bindEvents() {
   });
 
   // Clear page
-  document.getElementById('clearPageBtn').addEventListener('click', clearCurrentPage);
+  on('clearPageBtn', 'click', clearCurrentPage);
 
   // Page navigation
-  document.getElementById('prevPage').addEventListener('click', () => goToPage(getCurrentPage() - 1));
-  document.getElementById('nextPage').addEventListener('click', () => goToPage(getCurrentPage() + 1));
-  document.getElementById('addPage').addEventListener('click', addPage);
+  on('prevPage', 'click', () => goToPage(getCurrentPage() - 1));
+  on('nextPage', 'click', () => goToPage(getCurrentPage() + 1));
+  on('addPage',  'click', addPage);
 
   // Global drag handlers — mouse
   document.addEventListener('mousemove', onMouseMove);
@@ -974,7 +982,7 @@ function bindEvents() {
     if (touchPending && e.touches.length === 1) {
       const dx = e.touches[0].clientX - touchPending.startX;
       const dy = e.touches[0].clientY - touchPending.startY;
-      if (Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+      if (Math.sqrt(dx * dx + dy * dy) > DRAG_THRESHOLD) {
         e.preventDefault();
         const { el, noteData } = touchPending;
         touchPending = null;

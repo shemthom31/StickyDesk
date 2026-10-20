@@ -228,10 +228,10 @@ function init() {
   if (pages.length === 0) pages.push({ id: 0, notes: [] });
   if (getCurrentPage() >= pages.length) setCurrentPage(0);
 
-  buildColorSwatches();
-  syncSettingsUI();
-  applySettings();
-  renderPage();
+  try { buildColorSwatches(); } catch (_) {}
+  try { syncSettingsUI();     } catch (_) {}
+  try { applySettings();      } catch (_) {}
+  try { renderPage();         } catch (_) {}
   bindEvents();
 }
 
@@ -280,8 +280,10 @@ function syncSettingsUI() {
 
 function updateTextColorUI() {
   const isBlack = state.settings.textColor === 'black';
-  document.getElementById('textColorBlack').classList.toggle('active', isBlack);
-  document.getElementById('textColorWhite').classList.toggle('active', !isBlack);
+  const blackBtn = document.getElementById('textColorBlack');
+  const whiteBtn = document.getElementById('textColorWhite');
+  if (blackBtn) blackBtn.classList.toggle('active', isBlack);
+  if (whiteBtn) whiteBtn.classList.toggle('active', !isBlack);
 }
 
 function updateFontSizeUI() {
@@ -345,6 +347,7 @@ function buildGridOverlay() {
   if (!gridOverlay) return;
   gridOverlay.innerHTML = '';
   if (state.settings.layoutMode !== 'grid') return;
+  if (!deskSurface) return;
 
   const deskH = deskSurface.clientHeight;
   const rows = Math.max(4, Math.floor((deskH - GRID_PAD * 2 + 15) / GRID_CELL));
@@ -487,7 +490,7 @@ function createNoteElement(noteData) {
     };
   }, { passive: true });
 
-  deskSurface.appendChild(el);
+  if (deskSurface) deskSurface.appendChild(el);
   return el;
 }
 
